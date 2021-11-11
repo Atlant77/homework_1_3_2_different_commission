@@ -14,28 +14,32 @@ const val MAX_VPAY_TRANSFER_MONTH = 4_000_000 //Максимальная сум�
 fun main(){
     var typeOfCard = TYPE_CARD_VKPAY // Тип счета по умолчанию
     var amountOfPreviusMonthPeriod = 0 //Сумму предыдущих переводов в этом месяце (по умолчанию - 0).
-    var amountOfDay = 0 //Сумма переводов за сутки (по умолчанию - 0).
+//    var amountOfDay = 0 //Сумма переводов за сутки (по умолчанию - 0).
     var transferAmount = 1400000 // Сумма перевода в коп.
 
+    calcComitionOfTransfer(typeOfCard = TYPE_CARD_VKPAY, amountOfPreviusMonthPeriod = 0, transferAmount)
+}
+
+fun calcComitionOfTransfer(typeOfCard: String, amountOfPreviusMonthPeriod: Int, transferAmount: Int) {
     if (typeOfCard == TYPE_CARD_VKPAY){
         if (transferAmount >= MAX_VPAY_TRANSFER_ONE_TIME){
             println("Превышен лимит суммы перевода за один раз.")
         }else if((amountOfPreviusMonthPeriod+transferAmount)> MAX_VPAY_TRANSFER_MONTH){
             println("Сумма превышает месячный лимит переводов.")
         }else{
-            var comissionOfTransfer = calcComitionOfTransfer(typeOfCard, transferAmount)
+            var comissionOfTransfer = calcFullComitionOfTransfer(typeOfCard, transferAmount)
             printMassageOfTransfer(typeOfCard, transferAmount, comissionOfTransfer)
         }
     } else if (typeOfCard == TYPE_CARD_MAESTRO||
-            typeOfCard == TYPE_CARD_MIR||
-            typeOfCard == TYPE_CARD_VISA||
-            typeOfCard ==TYPE_CARD_MASTER){
-        if ((amountOfDay + transferAmount) >= MAX_CARD_TRANSFER_DAY){
-            println("Превышен лимит суммы перевода за сутки.")
-        }else if((amountOfPreviusMonthPeriod+transferAmount)> MAX_CARD_TRANSFER_MONTH){
+        typeOfCard == TYPE_CARD_MIR||
+        typeOfCard == TYPE_CARD_VISA||
+        typeOfCard ==TYPE_CARD_MASTER){
+        if((amountOfPreviusMonthPeriod+transferAmount)> MAX_CARD_TRANSFER_MONTH){
             println("Сумма превышает месячный лимит переводов.")
-        }else{
-            var comissionOfTransfer = calcComitionOfTransfer(typeOfCard, transferAmount)
+        }/*else if((amountOfDay + transferAmount) >= MAX_CARD_TRANSFER_DAY){
+            println("Превышен лимит суммы перевода за сутки.")
+        }*/else{
+            var comissionOfTransfer = calcFullComitionOfTransfer(typeOfCard, transferAmount)
             printMassageOfTransfer(typeOfCard, transferAmount, comissionOfTransfer)
         }
     }
@@ -49,7 +53,7 @@ fun printMassageOfTransfer(typeOfCard: String, transferAmount: Int, comissionOfT
 }
 
 // Функция расчета суммы комиссии в зависимости от типа карты
-fun calcComitionOfTransfer(typeOfCard: String, transferAmount: Int): Int {
+fun calcFullComitionOfTransfer(typeOfCard: String, transferAmount: Int): Int {
     when (typeOfCard){
         TYPE_CARD_VKPAY -> return 0
         TYPE_CARD_MIR, TYPE_CARD_VISA ->
