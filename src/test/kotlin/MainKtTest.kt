@@ -95,7 +95,7 @@ class MainKtTest {
         val result = calcFullComitionOfTransfer(typeOfCard, transferAmount)
 
         // assert — сравнение ожидаемого результата с фактическим.
-        assertEquals(0, result)
+        assertEquals(12, result)
     }
 
     @Test
